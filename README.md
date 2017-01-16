@@ -52,6 +52,15 @@ BenchmarkOr/128K-8             	  200000	      9995 ns/op	13112.48 MB/s
 BenchmarkOr/1M-8               	   20000	     90165 ns/op	11629.42 MB/s
 BenchmarkOr/16M-8              	     500	   3054965 ns/op	5491.79 MB/s
 BenchmarkOr/128M-8             	      50	  24489454 ns/op	5480.63 MB/s
+BenchmarkNot/15-8  	100000000	        18.2 ns/op	 825.06 MB/s
+BenchmarkNot/32-8  	100000000	        10.2 ns/op	3147.15 MB/s
+BenchmarkNot/128-8 	100000000	        13.1 ns/op	9793.64 MB/s
+BenchmarkNot/1K-8  	50000000	        31.3 ns/op	32753.75 MB/s
+BenchmarkNot/16K-8 	 3000000	       425 ns/op	38519.25 MB/s
+BenchmarkNot/128K-8         	  300000	      5092 ns/op	25738.26 MB/s
+BenchmarkNot/1M-8           	   20000	     63538 ns/op	16503.00 MB/s
+BenchmarkNot/16M-8          	    1000	   2070027 ns/op	8104.83 MB/s
+BenchmarkNot/128M-8         	     100	  18581626 ns/op	7223.14 MB/s
 ```
 
 ## License
