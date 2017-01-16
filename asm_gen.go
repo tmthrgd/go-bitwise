@@ -132,6 +132,87 @@ func orASM(a *asm.Asm) {
 	threeArgumentASM(a, "orASM", a.Por, a.Orb)
 }
 
+func notASM(a *asm.Asm) {
+	a.NewFunction("notASM")
+	a.NoSplit()
+
+	dst := a.Argument("dst", 8)
+	src := a.Argument("src", 8)
+	length := a.Argument("len", 8)
+
+	a.Start()
+
+	hugeloop := a.NewLabel("hugeloop")
+	bigloop := a.NewLabel("bigloop")
+	loop := a.NewLabel("loop")
+	ret := a.NewLabel("ret")
+
+	di, si, cx := asm.DI, asm.SI, asm.BX
+
+	a.Movq(di, dst)
+	a.Movq(si, src)
+	a.Movq(cx, length)
+
+	a.Cmpq(asm.Constant(16), cx)
+	a.Jb(loop)
+
+	a.Pcmpeql(asm.X0, asm.X0)
+
+	a.Cmpq(asm.Constant(64), cx)
+	a.Jb(bigloop)
+
+	a.Label(hugeloop)
+
+	a.Movou(asm.X1, asm.Address(si, cx, asm.SX1, -16))
+	a.Movou(asm.X2, asm.Address(si, cx, asm.SX1, -32))
+	a.Movou(asm.X3, asm.Address(si, cx, asm.SX1, -48))
+	a.Movou(asm.X4, asm.Address(si, cx, asm.SX1, -64))
+
+	a.Pxor(asm.X1, asm.X0)
+	a.Pxor(asm.X2, asm.X0)
+	a.Pxor(asm.X3, asm.X0)
+	a.Pxor(asm.X4, asm.X0)
+
+	a.Movou(asm.Address(di, cx, asm.SX1, -16), asm.X1)
+	a.Movou(asm.Address(di, cx, asm.SX1, -32), asm.X2)
+	a.Movou(asm.Address(di, cx, asm.SX1, -48), asm.X3)
+	a.Movou(asm.Address(di, cx, asm.SX1, -64), asm.X4)
+
+	a.Subq(cx, asm.Constant(64))
+	a.Jz(ret)
+
+	a.Cmpq(asm.Constant(64), cx)
+	a.Jae(hugeloop)
+
+	a.Cmpq(asm.Constant(16), cx)
+	a.Jb(loop)
+
+	a.Label(bigloop)
+
+	a.Movou(asm.X1, asm.Address(si, cx, asm.SX1, -16))
+	a.Pxor(asm.X1, asm.X0)
+	a.Movou(asm.Address(di, cx, asm.SX1, -16), asm.X1)
+
+	a.Subq(cx, asm.Constant(16))
+	a.Jz(ret)
+
+	a.Cmpq(asm.Constant(16), cx)
+	a.Jae(bigloop)
+
+	a.Label(loop)
+
+	a.Movb(asm.AX, asm.Address(si, cx, asm.SX1, -1))
+	a.Notb(asm.AX)
+	a.Movb(asm.Address(di, cx, asm.SX1, -1), asm.AX)
+
+	a.Subq(cx, asm.Constant(1))
+	a.Jnz(loop)
+
+	a.Label(ret)
+
+	a.Ret()
+}
+
 func main() {
 	if err := asm.Do("bitwise_xor_amd64.s", header, xorASM); err != nil {
 		panic(err)
@@ -146,6 +227,10 @@ func main() {
 	}
 
 	if err := asm.Do("bitwise_or_amd64.s", header, orASM); err != nil {
+		panic(err)
+	}
+
+	if err := asm.Do("bitwise_not_amd64.s", header, notASM); err != nil {
 		panic(err)
 	}
 }

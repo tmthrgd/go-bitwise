@@ -129,6 +129,24 @@ var orTestVectors = []testVector{
 	},
 }
 
+var notTestVectors = []testVector{
+	{
+		[]byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
+		[]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		nil,
+	},
+	{
+		[]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		[]byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
+		nil,
+	},
+	{
+		[]byte{0x55, 0xAA, 0xA5, 0x5A, 0x55, 0xAA, 0xA5, 0x5A, 0x55, 0xAA, 0xA5, 0x5A, 0x55, 0xAA, 0xA5, 0x5A, 0x55, 0xAA, 0xA5, 0x5A},
+		[]byte{0xAA, 0x55, 0x5A, 0xA5, 0xAA, 0x55, 0x5A, 0xA5, 0xAA, 0x55, 0x5A, 0xA5, 0xAA, 0x55, 0x5A, 0xA5, 0xAA, 0x55, 0x5A, 0xA5},
+		nil,
+	},
+}
+
 func testXORBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
@@ -193,6 +211,23 @@ func testOrBytes(dst, a, b []byte) int {
 	return n
 }
 
+func testNotBytes(dst, src, _ []byte) int {
+	n := len(src)
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	for i := 0; i < n; i++ {
+		dst[i] = ^src[i]
+	}
+
+	return n
+}
+
+func testNotThree(dst, src, _ []byte) int {
+	return Not(dst, src)
+}
+
 func testThree(t *testing.T, fn, testFn func(dst, a, b []byte) int, testVectors []testVector) {
 	for i, vector := range testVectors {
 		dst := make([]byte, len(vector.dst))
@@ -253,6 +288,10 @@ func TestAndNot(t *testing.T) {
 
 func TestOr(t *testing.T) {
 	testThree(t, Or, testOrBytes, orTestVectors)
+}
+
+func TestNot(t *testing.T) {
+	testThree(t, testNotThree, testNotBytes, notTestVectors)
 }
 
 var benchSizes = []struct {
@@ -322,4 +361,12 @@ func BenchmarkOr(b *testing.B) {
 
 func BenchmarkOrGo(b *testing.B) {
 	benchmarkThree(b, testOrBytes)
+}
+
+func BenchmarkNot(b *testing.B) {
+	benchmarkThree(b, testNotThree)
+}
+
+func BenchmarkNotGo(b *testing.B) {
+	benchmarkThree(b, testNotBytes)
 }

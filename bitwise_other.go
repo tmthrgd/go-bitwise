@@ -225,3 +225,49 @@ func Or(dst, a, b []byte) int {
 	// we could still try fastORBytes.
 	return safeOrBytes(dst, a, b)
 }
+
+func fastNotBytes(dst, src []byte) int {
+	n := len(src)
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	w := n / wordSize
+	if w > 0 {
+		dw := *(*[]uintptr)(unsafe.Pointer(&dst))
+		sw := *(*[]uintptr)(unsafe.Pointer(&src))
+
+		for i := 0; i < w; i++ {
+			dw[i] = ^sw[i]
+		}
+	}
+
+	for i := (n - n%wordSize); i < n; i++ {
+		dst[i] = ^src[i]
+	}
+
+	return n
+}
+
+func safeNotBytes(dst, src []byte) int {
+	n := len(src)
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	for i := 0; i < n; i++ {
+		dst[i] = ^src[i]
+	}
+
+	return n
+}
+
+func Not(dst, src []byte) int {
+	if supportsUnaligned {
+		return fastNotBytes(dst, src)
+	}
+
+	// TODO: if (dst, src) have common alignment
+	// we could still try fastNotBytes.
+	return safeNotBytes(dst, src)
+}

@@ -75,6 +75,20 @@ func Or(dst, a, b []byte) int {
 	return n
 }
 
+func Not(dst, src []byte) int {
+	n := len(src)
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	if n == 0 {
+		return 0
+	}
+
+	notASM(&dst[0], &src[0], uint64(n))
+	return n
+}
+
 //go:generate go run asm_gen.go
 
 // This function is implemented in bitwise_xor_amd64.s
@@ -92,3 +106,7 @@ func andNotASM(dst, a, b *byte, len uint64)
 // This function is implemented in bitwise_or_amd64.s
 //go:noescape
 func orASM(dst, a, b *byte, len uint64)
+
+// This function is implemented in bitwise_not_amd64.s
+//go:noescape
+func notASM(dst, src *byte, len uint64)
