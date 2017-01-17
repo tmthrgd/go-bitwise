@@ -281,7 +281,7 @@ func Or(dst, a, b []byte) int {
 	}
 
 	// TODO: if (dst, a, b) have common alignment
-	// we could still try fastORBytes.
+	// we could still try fastOrBytes.
 	return safeOrBytes(dst, a, b)
 }
 
