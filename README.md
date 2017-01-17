@@ -3,7 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/tmthrgd/go-bitwise?status.svg)](https://godoc.org/github.com/tmthrgd/go-bitwise)
 [![Build Status](https://travis-ci.org/tmthrgd/go-bitwise.svg?branch=master)](https://travis-ci.org/tmthrgd/go-bitwise)
 
-Efficient bitwise (xor/and/and-not/or/not) implementations for Golang.
+Efficient bitwise (xor/and/and-not/or/nor/not) implementations for Golang.
 
 go-bitwise provides bitwise operations using SSE/AVX instructions on x86-64.
 
@@ -52,6 +52,15 @@ BenchmarkOr/128K-8             	  200000	      9995 ns/op	13112.48 MB/s
 BenchmarkOr/1M-8               	   20000	     90165 ns/op	11629.42 MB/s
 BenchmarkOr/16M-8              	     500	   3054965 ns/op	5491.79 MB/s
 BenchmarkOr/128M-8             	      50	  24489454 ns/op	5480.63 MB/s
+BenchmarkNor/15-8  	100000000	        19.5 ns/op	 767.78 MB/s
+BenchmarkNor/32-8  	200000000	         9.22 ns/op	3469.25 MB/s
+BenchmarkNor/128-8 	100000000	        13.0 ns/op	9880.94 MB/s
+BenchmarkNor/1K-8  	50000000	        38.6 ns/op	26495.07 MB/s
+BenchmarkNor/16K-8 	 2000000	       788 ns/op	20767.07 MB/s
+BenchmarkNor/128K-8         	  200000	     10505 ns/op	12477.07 MB/s
+BenchmarkNor/1M-8           	   20000	     89684 ns/op	11691.86 MB/s
+BenchmarkNor/16M-8          	     500	   3140102 ns/op	5342.89 MB/s
+BenchmarkNor/128M-8         	      50	  24903809 ns/op	5389.45 MB/s
 BenchmarkNot/15-8  	100000000	        18.2 ns/op	 825.06 MB/s
 BenchmarkNot/32-8  	100000000	        10.2 ns/op	3147.15 MB/s
 BenchmarkNot/128-8 	100000000	        13.1 ns/op	9793.64 MB/s

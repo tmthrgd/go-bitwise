@@ -45,6 +45,10 @@ func threeArgumentASM(a *asm.Asm, name string, pop, opb func(ops ...asm.Operand)
 	a.Cmpq(asm.Constant(16), cx)
 	a.Jb(loop)
 
+	if name == "norASM" {
+		a.Pcmpeql(asm.X15, asm.X15)
+	}
+
 	a.Cmpq(asm.Constant(64), cx)
 	a.Jb(bigloop)
 
@@ -130,6 +134,24 @@ func andNotASM(a *asm.Asm) {
 
 func orASM(a *asm.Asm) {
 	threeArgumentASM(a, "orASM", a.Por, a.Orb)
+}
+
+func norASM(a *asm.Asm) {
+	threeArgumentASM(a, "norASM", func(ops ...asm.Operand) {
+		if len(ops) != 2 {
+			panic("wrong number of operands")
+		}
+
+		a.Por(ops[0], ops[1])
+		a.Pxor(ops[0], asm.X15)
+	}, func(ops ...asm.Operand) {
+		if len(ops) != 2 {
+			panic("wrong number of operands")
+		}
+
+		a.Orb(ops[0], ops[1])
+		a.Notb(ops[0])
+	})
 }
 
 func notASM(a *asm.Asm) {
@@ -227,6 +249,10 @@ func main() {
 	}
 
 	if err := asm.Do("bitwise_or_amd64.s", header, orASM); err != nil {
+		panic(err)
+	}
+
+	if err := asm.Do("bitwise_nor_amd64.s", header, norASM); err != nil {
 		panic(err)
 	}
 

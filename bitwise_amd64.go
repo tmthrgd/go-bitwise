@@ -5,7 +5,7 @@
 
 // +build amd64,!gccgo,!appengine
 
-// Efficient bitwise (xor/and/and-not/or/not) implementations for Golang.
+// Efficient bitwise (xor/and/and-not/or/nor/not) implementations for Golang.
 package bitwise
 
 // Sets each element in according to dst[i] = a[i] XOR b[i]
@@ -80,6 +80,24 @@ func Or(dst, a, b []byte) int {
 	return n
 }
 
+// Sets each element in according to dst[i] = NOT (a[i] OR b[i])
+func Nor(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	if n == 0 {
+		return 0
+	}
+
+	norASM(&dst[0], &a[0], &b[0], uint64(n))
+	return n
+}
+
 // Sets each element in according to dst[i] = NOT src[i]
 func Not(dst, src []byte) int {
 	n := len(src)
@@ -112,6 +130,10 @@ func andNotASM(dst, a, b *byte, len uint64)
 // This function is implemented in bitwise_or_amd64.s
 //go:noescape
 func orASM(dst, a, b *byte, len uint64)
+
+// This function is implemented in bitwise_nor_amd64.s
+//go:noescape
+func norASM(dst, a, b *byte, len uint64)
 
 // This function is implemented in bitwise_not_amd64.s
 //go:noescape
