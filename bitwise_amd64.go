@@ -5,7 +5,7 @@
 
 // +build amd64,!gccgo,!appengine
 
-// Efficient bitwise (xor/xnor/and/and-not/nand/or/nor/not) implementations for Golang.
+// Package bitwise provides efficient implementations of xor/xnor/and/and-not/nand/or/nor/not.
 package bitwise
 
 // Sets each element in according to dst[i] = a[i] XOR b[i]
