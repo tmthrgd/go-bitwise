@@ -5,8 +5,10 @@
 
 // +build amd64,!gccgo,!appengine
 
+// Efficient bitwise (xor/and/and-not/or/not) implementations for Golang.
 package bitwise
 
+// Sets each element in according to dst[i] = a[i] XOR b[i]
 func XOR(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
@@ -24,6 +26,7 @@ func XOR(dst, a, b []byte) int {
 	return n
 }
 
+// Sets each element in according to dst[i] = a[i] AND b[i]
 func And(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
@@ -41,6 +44,7 @@ func And(dst, a, b []byte) int {
 	return n
 }
 
+// Sets each element in according to dst[i] = a[i] AND (NOT b[i])
 func AndNot(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
@@ -58,6 +62,7 @@ func AndNot(dst, a, b []byte) int {
 	return n
 }
 
+// Sets each element in according to dst[i] = a[i] OR b[i]
 func Or(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
@@ -75,6 +80,7 @@ func Or(dst, a, b []byte) int {
 	return n
 }
 
+// Sets each element in according to dst[i] = NOT src[i]
 func Not(dst, src []byte) int {
 	n := len(src)
 	if len(dst) < n {

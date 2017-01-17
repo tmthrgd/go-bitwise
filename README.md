@@ -3,7 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/tmthrgd/go-bitwise?status.svg)](https://godoc.org/github.com/tmthrgd/go-bitwise)
 [![Build Status](https://travis-ci.org/tmthrgd/go-bitwise.svg?branch=master)](https://travis-ci.org/tmthrgd/go-bitwise)
 
-Efficient bitwise (xor/and/and-not/or) implementations for Golang.
+Efficient bitwise (xor/and/and-not/or/not) implementations for Golang.
 
 go-bitwise provides bitwise operations using SSE/AVX instructions on x86-64.
 
