@@ -1,4 +1,4 @@
-# go-hex
+# go-bitwise
 
 [![GoDoc](https://godoc.org/github.com/tmthrgd/go-bitwise?status.svg)](https://godoc.org/github.com/tmthrgd/go-bitwise)
 [![Build Status](https://travis-ci.org/tmthrgd/go-bitwise.svg?branch=master)](https://travis-ci.org/tmthrgd/go-bitwise)
