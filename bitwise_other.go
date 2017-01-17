@@ -4,7 +4,7 @@
 
 // +build !amd64 gccgo appengine
 
-// Efficient bitwise (xor/and/and-not/or/nor/not) implementations for Golang.
+// Efficient bitwise (xor/xnor/and/and-not/or/nor/not) implementations for Golang.
 package bitwise
 
 import (
@@ -67,6 +67,60 @@ func XOR(dst, a, b []byte) int {
 	// TODO: if (dst, a, b) have common alignment
 	// we could still try fastXORBytes.
 	return safeXORBytes(dst, a, b)
+}
+
+func fastXNORBytes(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	w := n / wordSize
+	if w > 0 {
+		dw := *(*[]uintptr)(unsafe.Pointer(&dst))
+		aw := *(*[]uintptr)(unsafe.Pointer(&a))
+		bw := *(*[]uintptr)(unsafe.Pointer(&b))
+
+		for i := 0; i < w; i++ {
+			dw[i] = ^(aw[i] ^ bw[i])
+		}
+	}
+
+	for i := (n - n%wordSize); i < n; i++ {
+		dst[i] = ^(a[i] ^ b[i])
+	}
+
+	return n
+}
+
+func safeXNORBytes(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	for i := 0; i < n; i++ {
+		dst[i] = ^(a[i] ^ b[i])
+	}
+
+	return n
+}
+
+// Sets each element in according to dst[i] = NOT (a[i] XOR b[i])
+func XNOR(dst, a, b []byte) int {
+	if supportsUnaligned {
+		return fastXNORBytes(dst, a, b)
+	}
+
+	// TODO: if (dst, a, b) have common alignment
+	// we could still try fastXNORBytes.
+	return safeXNORBytes(dst, a, b)
 }
 
 func fastAndBytes(dst, a, b []byte) int {

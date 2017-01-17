@@ -45,7 +45,7 @@ func threeArgumentASM(a *asm.Asm, name string, pop, opb func(ops ...asm.Operand)
 	a.Cmpq(asm.Constant(16), cx)
 	a.Jb(loop)
 
-	if name == "nandASM" || name == "norASM" {
+	if name == "xnorASM" || name == "nandASM" || name == "norASM" {
 		a.Pcmpeql(asm.X15, asm.X15)
 	}
 
@@ -114,6 +114,24 @@ func threeArgumentASM(a *asm.Asm, name string, pop, opb func(ops ...asm.Operand)
 
 func xorASM(a *asm.Asm) {
 	threeArgumentASM(a, "xorASM", a.Pxor, a.Xorb)
+}
+
+func xnorASM(a *asm.Asm) {
+	threeArgumentASM(a, "xnorASM", func(ops ...asm.Operand) {
+		if len(ops) != 2 {
+			panic("wrong number of operands")
+		}
+
+		a.Pxor(ops[0], ops[1])
+		a.Pxor(ops[0], asm.X15)
+	}, func(ops ...asm.Operand) {
+		if len(ops) != 2 {
+			panic("wrong number of operands")
+		}
+
+		a.Xorb(ops[0], ops[1])
+		a.Notb(ops[0])
+	})
 }
 
 func andASM(a *asm.Asm) {
@@ -255,6 +273,10 @@ func notASM(a *asm.Asm) {
 
 func main() {
 	if err := asm.Do("bitwise_xor_amd64.s", header, xorASM); err != nil {
+		panic(err)
+	}
+
+	if err := asm.Do("bitwise_xnor_amd64.s", header, xnorASM); err != nil {
 		panic(err)
 	}
 
