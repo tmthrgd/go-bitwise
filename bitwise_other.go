@@ -177,6 +177,60 @@ func AndNot(dst, a, b []byte) int {
 	return safeAndNotBytes(dst, a, b)
 }
 
+func fastNandBytes(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	w := n / wordSize
+	if w > 0 {
+		dw := *(*[]uintptr)(unsafe.Pointer(&dst))
+		aw := *(*[]uintptr)(unsafe.Pointer(&a))
+		bw := *(*[]uintptr)(unsafe.Pointer(&b))
+
+		for i := 0; i < w; i++ {
+			dw[i] = ^(aw[i] & bw[i])
+		}
+	}
+
+	for i := (n - n%wordSize); i < n; i++ {
+		dst[i] = ^(a[i] & b[i])
+	}
+
+	return n
+}
+
+func safeNandBytes(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	if len(dst) < n {
+		n = len(dst)
+	}
+
+	for i := 0; i < n; i++ {
+		dst[i] = ^(a[i] & b[i])
+	}
+
+	return n
+}
+
+// Sets each element in according to dst[i] = NOT (a[i] AND b[i])
+func Nand(dst, a, b []byte) int {
+	if supportsUnaligned {
+		return fastNandBytes(dst, a, b)
+	}
+
+	// TODO: if (dst, a, b) have common alignment
+	// we could still try fastNandBytes.
+	return safeNandBytes(dst, a, b)
+}
+
 func fastOrBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
