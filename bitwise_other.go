@@ -177,7 +177,7 @@ func AndNot(dst, a, b []byte) int {
 	return safeAndNotBytes(dst, a, b)
 }
 
-func fastNandBytes(dst, a, b []byte) int {
+func fastNotAndBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -204,7 +204,7 @@ func fastNandBytes(dst, a, b []byte) int {
 	return n
 }
 
-func safeNandBytes(dst, a, b []byte) int {
+func safeNotAndBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -221,14 +221,14 @@ func safeNandBytes(dst, a, b []byte) int {
 }
 
 // Sets each element in according to dst[i] = NOT (a[i] AND b[i])
-func Nand(dst, a, b []byte) int {
+func NotAnd(dst, a, b []byte) int {
 	if supportsUnaligned {
-		return fastNandBytes(dst, a, b)
+		return fastNotAndBytes(dst, a, b)
 	}
 
 	// TODO: if (dst, a, b) have common alignment
-	// we could still try fastNandBytes.
-	return safeNandBytes(dst, a, b)
+	// we could still try fastNotAndBytes.
+	return safeNotAndBytes(dst, a, b)
 }
 
 func fastOrBytes(dst, a, b []byte) int {
@@ -285,7 +285,7 @@ func Or(dst, a, b []byte) int {
 	return safeOrBytes(dst, a, b)
 }
 
-func fastNorBytes(dst, a, b []byte) int {
+func fastNotOrBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -312,7 +312,7 @@ func fastNorBytes(dst, a, b []byte) int {
 	return n
 }
 
-func safeNorBytes(dst, a, b []byte) int {
+func safeNotOrBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -329,14 +329,14 @@ func safeNorBytes(dst, a, b []byte) int {
 }
 
 // Sets each element in according to dst[i] = NOT (a[i] OR b[i])
-func Nor(dst, a, b []byte) int {
+func NotOr(dst, a, b []byte) int {
 	if supportsUnaligned {
-		return fastNorBytes(dst, a, b)
+		return fastNotOrBytes(dst, a, b)
 	}
 
 	// TODO: if (dst, a, b) have common alignment
-	// we could still try fastNORBytes.
-	return safeNorBytes(dst, a, b)
+	// we could still try fastNotOrBytes.
+	return safeNotOrBytes(dst, a, b)
 }
 
 func fastNotBytes(dst, src []byte) int {

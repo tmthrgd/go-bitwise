@@ -256,7 +256,7 @@ func testAndNotBytes(dst, a, b []byte) int {
 	return n
 }
 
-func testNandBytes(dst, a, b []byte) int {
+func testNotAndBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -288,7 +288,7 @@ func testOrBytes(dst, a, b []byte) int {
 	return n
 }
 
-func testNorBytes(dst, a, b []byte) int {
+func testNotOrBytes(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -379,16 +379,16 @@ func TestAndNot(t *testing.T) {
 	testThree(t, AndNot, testAndNotBytes, andNotTestVectors)
 }
 
-func TestNand(t *testing.T) {
-	testThree(t, Nand, testNandBytes, nandTestVectors)
+func TestNotAnd(t *testing.T) {
+	testThree(t, NotAnd, testNotAndBytes, nandTestVectors)
 }
 
 func TestOr(t *testing.T) {
 	testThree(t, Or, testOrBytes, orTestVectors)
 }
 
-func TestNor(t *testing.T) {
-	testThree(t, Nor, testNorBytes, norTestVectors)
+func TestNotOr(t *testing.T) {
+	testThree(t, NotOr, testNotOrBytes, norTestVectors)
 }
 
 func TestNot(t *testing.T) {
@@ -456,12 +456,12 @@ func BenchmarkAndNotGo(b *testing.B) {
 	benchmarkThree(b, testAndNotBytes)
 }
 
-func BenchmarkNand(b *testing.B) {
-	benchmarkThree(b, Nand)
+func BenchmarkNotAnd(b *testing.B) {
+	benchmarkThree(b, NotAnd)
 }
 
-func BenchmarkNandGo(b *testing.B) {
-	benchmarkThree(b, testNandBytes)
+func BenchmarkNotAndGo(b *testing.B) {
+	benchmarkThree(b, testNotAndBytes)
 }
 
 func BenchmarkOr(b *testing.B) {
@@ -472,12 +472,12 @@ func BenchmarkOrGo(b *testing.B) {
 	benchmarkThree(b, testOrBytes)
 }
 
-func BenchmarkNor(b *testing.B) {
-	benchmarkThree(b, Nor)
+func BenchmarkNotOr(b *testing.B) {
+	benchmarkThree(b, NotOr)
 }
 
-func BenchmarkNorGo(b *testing.B) {
-	benchmarkThree(b, testNorBytes)
+func BenchmarkNotOrGo(b *testing.B) {
+	benchmarkThree(b, testNotOrBytes)
 }
 
 func BenchmarkNot(b *testing.B) {

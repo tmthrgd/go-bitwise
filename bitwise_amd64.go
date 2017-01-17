@@ -63,7 +63,7 @@ func AndNot(dst, a, b []byte) int {
 }
 
 // Sets each element in according to dst[i] = NOT (a[i] AND b[i])
-func Nand(dst, a, b []byte) int {
+func NotAnd(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
@@ -99,7 +99,7 @@ func Or(dst, a, b []byte) int {
 }
 
 // Sets each element in according to dst[i] = NOT (a[i] OR b[i])
-func Nor(dst, a, b []byte) int {
+func NotOr(dst, a, b []byte) int {
 	n := len(a)
 	if len(b) < n {
 		n = len(b)
