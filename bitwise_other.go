@@ -35,7 +35,7 @@ func fastXORBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = a[i] ^ b[i]
 	}
 
@@ -89,7 +89,7 @@ func fastXNORBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = ^(a[i] ^ b[i])
 	}
 
@@ -143,7 +143,7 @@ func fastAndBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = a[i] & b[i]
 	}
 
@@ -197,7 +197,7 @@ func fastAndNotBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = a[i] &^ b[i]
 	}
 
@@ -251,7 +251,7 @@ func fastNotAndBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = ^(a[i] & b[i])
 	}
 
@@ -305,7 +305,7 @@ func fastOrBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = a[i] | b[i]
 	}
 
@@ -359,7 +359,7 @@ func fastNotOrBytes(dst, a, b []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = ^(a[i] | b[i])
 	}
 
@@ -409,7 +409,7 @@ func fastNotBytes(dst, src []byte) int {
 		}
 	}
 
-	for i := (n - n%wordSize); i < n; i++ {
+	for i := n - n%wordSize; i < n; i++ {
 		dst[i] = ^src[i]
 	}
 
